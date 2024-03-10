@@ -28,7 +28,7 @@ jobs:
           write_changes: true
 
   scrypto-test-and-build:
-    name: Check and Build Blueprints
+    name: Check and Lint
     needs: typo_check
     permissions:
       contents: write
