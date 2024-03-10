@@ -1,0 +1,43 @@
+name: Template - Scrypto Package CI 
+
+on:
+  workflow_call:
+    inputs:
+      package:
+        required: true
+        type: string
+      scrypto_version:
+        required: true
+        type: string
+    
+jobs:
+  
+  scrypto-test-and-build:
+    name: Check and Build Blueprints
+    permissions:
+      contents: write
+    runs-on: ubuntu-latest
+    container:
+      image: ghcr.io/atoumbre/scrypto-builder:${{inputs.scrypto_version}}
+      env:
+        DOCKER_DEFAULT_PLATFORM: linux/amd64/v4
+      volumes:
+        - ${{github.workspace}}:/src
+
+    steps:
+
+      - name: Checkout
+        uses: actions/checkout@v4
+
+      - name: Build Blueprints
+        run: |
+            cd "${{ inputs.package }}"
+            scrypto build
+         
+      - name: Create Release
+        uses: ncipollo/release-action@v1
+        with:
+          artifacts: "${{ inputs.package }}/target/wasm32-unknown-unknown/release/*.wasm,${{ inputs.package }}/target/wasm32-unknown-unknown/release/*.rpd"
+          tag: ${{ inputs.package }}/${{ github.ref_name }}/${{ github.run_number }}
+          name: "Package release: ${{ inputs.package }} (${{ github.ref_name }}) - ${{ github.run_number }}"
+          prerelease: ${{ github.ref_name != 'main' }}

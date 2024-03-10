@@ -1,0 +1,9 @@
+# Visual studio code
+.vscode
+.history
+
+# Intellij
+.idea
+
+# macOS folder attributes
+.DS_Store

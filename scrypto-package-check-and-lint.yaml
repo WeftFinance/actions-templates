@@ -1,0 +1,58 @@
+name: Template - Scrypto Package CI 
+
+on:
+  workflow_call:
+    inputs:
+      package:
+        required: true
+        type: string
+      scrypto_version:
+        required: true
+        type: string
+      create_release:
+        required: false
+        type: boolean
+    
+jobs:
+  typo_check:
+    name: Spell Check
+    runs-on: ubuntu-latest
+    
+    steps:
+      - name: Checkout Actions Repository
+        uses: actions/checkout@v2
+
+      - name: Writes changes in the local checkout
+        uses: crate-ci/typos@master
+        with:
+          write_changes: true
+
+  scrypto-test-and-build:
+    name: Check and Build Blueprints
+    needs: typo_check
+    permissions:
+      contents: write
+    runs-on: ubuntu-latest
+    container:
+      image: ghcr.io/atoumbre/scrypto-builder:${{inputs.scrypto_version}}
+      env:
+        DOCKER_DEFAULT_PLATFORM: linux/amd64/v4
+      volumes:
+        - ${{github.workspace}}:/src
+
+    steps:
+
+      - name: Checkout
+        uses: actions/checkout@v4
+
+      - name: Check format and lint
+        run: |
+          cd "${{ inputs.package }}"
+          cargo fmt -- --check
+          cargo clippy -- -D warnings
+          cargo audit --ignore RUSTSEC-2022-0093
+          
+      - name: Test Blueprints
+        run: |
+          cd "${{ inputs.package }}"
+          scrypto test
