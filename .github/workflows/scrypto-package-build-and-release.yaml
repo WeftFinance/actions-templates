@@ -18,7 +18,7 @@ jobs:
       contents: write
     runs-on: ubuntu-latest
     container:
-      image: ghcr.io/atoumbre/scrypto-builder:${{inputs.scrypto_version}}
+      image: ghcr.io/weftfinance/scrypto-builder:${{inputs.scrypto_version}}
       env:
         DOCKER_DEFAULT_PLATFORM: linux/amd64/v4
       volumes:
