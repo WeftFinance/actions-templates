@@ -56,3 +56,4 @@ jobs:
         run: |
           cd "${{ inputs.package }}"
           scrypto test
+          scrypto coverage
