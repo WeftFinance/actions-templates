@@ -14,22 +14,15 @@ on:
         type: boolean
     
 jobs:
-  typo_check:
-    name: Spell Check
+  spellcheck:
     runs-on: ubuntu-latest
-    
     steps:
-      - name: Checkout Actions Repository
-        uses: actions/checkout@v2
-
-      - name: Writes changes in the local checkout
-        uses: crate-ci/typos@master
-        with:
-          write_changes: true
+      - uses: actions/checkout@v4
+      - uses: streetsidesoftware/cspell-action@v6
 
   scrypto-test-and-build:
     name: Check and Lint
-    needs: typo_check
+    needs: spellcheck
     permissions:
       contents: write
     runs-on: ubuntu-latest
