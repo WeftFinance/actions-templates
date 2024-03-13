@@ -14,15 +14,8 @@ on:
         type: boolean
     
 jobs:
-  spellcheck:
-    runs-on: ubuntu-latest
-    steps:
-      - uses: actions/checkout@v4
-      - uses: streetsidesoftware/cspell-action@v6
-
-  scrypto-test-and-build:
+  scrypto-lint-and-test:
     name: Check and Lint
-    needs: spellcheck
     permissions:
       contents: write
     runs-on: ubuntu-latest

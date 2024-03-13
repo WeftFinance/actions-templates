@@ -11,8 +11,7 @@ on:
         type: string
     
 jobs:
-  
-  scrypto-test-and-build:
+  scrypto-build-and-release:
     name: Build Blueprints
     permissions:
       contents: write
@@ -21,6 +20,7 @@ jobs:
       image: ghcr.io/weftfinance/scrypto-builder:${{inputs.scrypto_version}}
       env:
         DOCKER_DEFAULT_PLATFORM: linux/amd64/v4
+      
       volumes:
         - ${{github.workspace}}:/src
 
