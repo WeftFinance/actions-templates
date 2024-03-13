@@ -1,4 +1,4 @@
-name: Template - Scrypto Package CI 
+name: Template - Scrypto Package CI - Build and Release
 
 on:
   workflow_call:

@@ -1,4 +1,4 @@
-name: Template - Scrypto Package CI 
+name: Template - Spell Check
 
 on:
   workflow_call:
