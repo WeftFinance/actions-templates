@@ -1,4 +1,4 @@
-name: Template - Scrypto Package CI - Linut and Test
+name: Template - Scrypto Package CI - Test Coverage
 
 on:
   workflow_call:
@@ -34,10 +34,6 @@ jobs:
       - name: Check format and lint
         run: |
           cd "${{ inputs.package }}"
-          cargo fmt -- --check
-          cargo clippy -- -D warnings
-          cargo audit --ignore RUSTSEC-2022-0093
-          cargo test
           cargo converage
           
       # - name: Test Blueprints
