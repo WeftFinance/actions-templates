@@ -31,10 +31,10 @@ jobs:
       - name: Checkout
         uses: actions/checkout@v4
 
-      - name: Check format and lint
+      - name: Test Coverage
         run: |
           cd "${{ inputs.package }}"
-          cargo converage
+          scrypto converage
           
       # - name: Test Blueprints
       #   run: |
