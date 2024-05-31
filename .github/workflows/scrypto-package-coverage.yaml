@@ -34,7 +34,7 @@ jobs:
       - name: Test Coverage
         run: |
           cd "${{ inputs.package }}"
-          scrypto converage
+          scrypto coverage
           
       # - name: Test Blueprints
       #   run: |
