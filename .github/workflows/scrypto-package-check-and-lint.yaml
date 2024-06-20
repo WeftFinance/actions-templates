@@ -36,8 +36,8 @@ jobs:
           cd "${{ inputs.package }}"
           cargo fmt -- --check
           cargo clippy -- -D warnings
-          cargo audit --ignore RUSTSEC-2022-0093
-          cargo test
+          cargo audit
+          cargo test --quiet
           
       # - name: Test Blueprints
       #   run: |
