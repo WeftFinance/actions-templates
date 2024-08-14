@@ -43,10 +43,11 @@ jobs:
 
       - name: Check, format and lint
         run: |
-          pwd
-          find . -type d -mindepth 1 -maxdepth 4
-          cd /
-          find . -type d -mindepth 1 -maxdepth 4
+          cd "${{ inputs.package }}"
+          cargo fmt -- --check
+          cargo clippy -- -D warnings
+          cargo audit
+          cargo test --quiet
 
       - name: Cache dependencies
         uses: actions/cache/save@v4
