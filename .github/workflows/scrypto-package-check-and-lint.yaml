@@ -45,7 +45,7 @@ jobs:
           cargo audit
           cargo test --quiet
 
-      - name: Restore dependencies from cache
+      - name: Cache dependencies
         uses: actions/cache/save@v4
         with:
           path: target/
