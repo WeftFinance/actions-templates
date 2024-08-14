@@ -30,6 +30,16 @@ jobs:
 
       - name: Checkout
         uses: actions/checkout@v4
+        
+      - uses: actions/cache@v4
+        with:
+          path: |
+            ~/.cargo/bin/
+            ~/.cargo/registry/index/
+            ~/.cargo/registry/cache/
+            ~/.cargo/git/db/
+            target/
+          key: ${{ runner.os }}-cargo-${{ hashFiles('**/Cargo.lock') }}
 
       - name: Check format and lint
         run: |
@@ -38,6 +48,7 @@ jobs:
           cargo clippy -- -D warnings
           cargo audit
           cargo test --quiet
+
           
       # - name: Test Blueprints
       #   run: |
