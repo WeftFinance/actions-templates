@@ -35,7 +35,6 @@ jobs:
         uses: actions/cache/restore@v4
         with:
           path: |
-            /usr/local/cargo/bin
             /usr/local/cargo/registry/index/
             /usr/local/cargo/registry/cache/
             /src/**/target/
@@ -53,7 +52,6 @@ jobs:
         uses: actions/cache/save@v4
         with:
           path: |
-            /usr/local/cargo/bin
             /usr/local/cargo/registry/index/
             /usr/local/cargo/registry/cache/
             /src/**/target/
