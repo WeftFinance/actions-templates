@@ -34,7 +34,7 @@ jobs:
       - name: Restore dependencies from cache
         uses: actions/cache/restore@v4
         with:
-          path: target/
+          path: '**/target/'
           key: ${{ runner.os }}-cargo-${{ hashFiles('**/Cargo.lock') }}
 
       - name: Check, format and lint
@@ -48,5 +48,5 @@ jobs:
       - name: Cache dependencies
         uses: actions/cache/save@v4
         with:
-          path: target/
+          path: '**/target/'
           key: ${{ runner.os }}-cargo-${{ hashFiles('**/Cargo.lock') }}
