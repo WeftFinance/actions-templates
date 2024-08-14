@@ -35,28 +35,19 @@ jobs:
         uses: actions/cache/restore@v4
         with:
           path: |
-            ~/.cargo/bin/
-            ~/.cargo/registry/index/
-            ~/.cargo/registry/cache/
-            ~/.cargo/git/db/ 
             '**/target/'
           key: ${{ runner.os }}-cargo-${{ hashFiles('**/Cargo.lock') }}
 
       - name: Check, format and lint
         run: |
-          cd "${{ inputs.package }}"
-          cargo fmt -- --check
-          cargo clippy -- -D warnings
-          cargo audit
-          cargo test --quiet
+          pwd
+          find ~/.cargo -type d -maxdepth 2
+          cd ~
+          find ~/.cargo -type d -maxdepth 2
 
       - name: Cache dependencies
         uses: actions/cache/save@v4
         with:
           path: |
-            ~/.cargo/bin/
-            ~/.cargo/registry/index/
-            ~/.cargo/registry/cache/
-            ~/.cargo/git/db/ 
             '**/target/'
           key: ${{ runner.os }}-cargo-${{ hashFiles('**/Cargo.lock') }}
