@@ -41,9 +41,9 @@ jobs:
       - name: Check, format and lint
         run: |
           pwd
-          find ~/.cargo -type d -maxdepth 2
-          cd ~
-          find ~/.cargo -type d -maxdepth 2
+          ls
+          cd /
+          ls
 
       - name: Cache dependencies
         uses: actions/cache/save@v4
