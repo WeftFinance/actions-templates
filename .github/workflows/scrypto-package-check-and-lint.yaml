@@ -31,17 +31,13 @@ jobs:
       - name: Checkout
         uses: actions/checkout@v4
         
-      - uses: actions/cache@v4
+      - name: Restore dependencies from cache
+        uses: actions/cache/restore@v4
         with:
-          path: |
-            ~/.cargo/bin/
-            ~/.cargo/registry/index/
-            ~/.cargo/registry/cache/
-            ~/.cargo/git/db/
-            target/
+          path: target/
           key: ${{ runner.os }}-cargo-${{ hashFiles('**/Cargo.lock') }}
 
-      - name: Check format and lint
+      - name: Check, format and lint
         run: |
           cd "${{ inputs.package }}"
           cargo fmt -- --check
@@ -49,8 +45,8 @@ jobs:
           cargo audit
           cargo test --quiet
 
-          
-      # - name: Test Blueprints
-      #   run: |
-      #     cd "${{ inputs.package }}"
-      #     scrypto test
+      - name: Restore dependencies from cache
+        uses: actions/cache/save@v4
+        with:
+          path: target/
+          key: ${{ runner.os }}-cargo-${{ hashFiles('**/Cargo.lock') }}
