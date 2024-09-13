@@ -55,4 +55,4 @@ jobs:
             /usr/local/cargo/registry/index/
             /usr/local/cargo/registry/cache/
             /src/**/target/
-          key: ${{ runner.os }}-cargo-${{ hashFiles('**/Cargo.lock') }}
+          key: ${{ steps.restore-cache.outputs.cache-primary-key }}
