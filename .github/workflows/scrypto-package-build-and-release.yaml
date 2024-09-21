@@ -28,6 +28,16 @@ jobs:
 
       - name: Checkout
         uses: actions/checkout@v4
+      
+      - name: Restore dependencies from cache
+        id: restore-cache
+        uses: actions/cache/restore@v4
+        with:
+          path: |
+            /usr/local/cargo/registry/index/
+            /usr/local/cargo/registry/cache/
+            /src/**/target/
+          key: ${{ runner.os }}-cargo-${{ hashFiles('**/Cargo.lock') }}
 
       - name: Build Blueprints
         run: scrypto build -p {{ inputs.package }}
