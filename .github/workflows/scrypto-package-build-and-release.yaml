@@ -32,12 +32,12 @@ jobs:
       - name: Build Blueprints
         run: |
             cd "${{ inputs.package }}"
-            scrypto build
+            scrypto build -p {{ inputs.package }}
          
       - name: Create Release
         uses: ncipollo/release-action@v1
         with:
-          artifacts: "${{ inputs.package }}/target/wasm32-unknown-unknown/release/*.wasm,${{ inputs.package }}/target/wasm32-unknown-unknown/release/*.rpd"
+          artifacts: "./target/wasm32-unknown-unknown/release/{{ inputs.package }}.wasm,${{ inputs.package }}/target/wasm32-unknown-unknown/release/{{ inputs.package }}.rpd"
           tag: ${{ inputs.package }}/${{ github.ref_name }}/${{ github.run_number }}
           name: "Package release: ${{ inputs.package }} (${{ github.ref_name }}) - ${{ github.run_number }}"
           prerelease: ${{ github.ref_name != 'main' }}
