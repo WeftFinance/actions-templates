@@ -40,7 +40,7 @@ jobs:
           key: ${{ runner.os }}-cargo-${{ hashFiles('**/Cargo.lock') }}
 
       - name: Build Blueprints
-        run: scrypto build -p {{ inputs.package }}
+        run: scrypto build -p ${{ inputs.package }}
          
       - name: Create Release
         uses: ncipollo/release-action@v1
