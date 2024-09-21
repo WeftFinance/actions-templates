@@ -30,9 +30,7 @@ jobs:
         uses: actions/checkout@v4
 
       - name: Build Blueprints
-        run: |
-            cd "${{ inputs.package }}"
-            scrypto build -p {{ inputs.package }}
+        run: scrypto build -p {{ inputs.package }}
          
       - name: Create Release
         uses: ncipollo/release-action@v1
