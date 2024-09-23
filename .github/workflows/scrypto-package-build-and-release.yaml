@@ -43,11 +43,10 @@ jobs:
             /src/**/target/
           key: ${{ runner.os }}-cargo-${{ hashFiles('**/Cargo.lock') }} 
 
-      - name: Build Blueprints for each package
-        run: joined_packages="${{ inputs.packages }}"
-      - run:  IFS=',' read -r -a package_array <<< "$joined_packages"
-      - run: |
-          for package in package_array; do
+      - name: Build Blueprints for each package 
+        run: |
+          IFS=',' 
+          for package in ${{ inputs.packages }}; do
             echo "Building package: $package"
             scrypto build -p $package
           done
