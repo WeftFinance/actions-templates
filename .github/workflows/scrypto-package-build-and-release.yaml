@@ -49,13 +49,13 @@ jobs:
       - name: Parse package array
         id: parse-packages
         run: |
-          echo "Packages: ${{ inputs.packages }}"
           PACKAGES=$(echo '${{ inputs.packages }}' | jq -r '.[]')
-          echo "::set-output name=package_array::${PACKAGES}"
+          echo "Packages array: \n $PACKAGES"
+          echo "PACKAGE_ARRAY=$PACKAGES" >> $GITHUB_OUTPUT
 
       - name: Build Blueprints for each package
         run: |
-          for package in ${{ steps.parse-packages.outputs.package_array }}; do
+          for package in ${{ steps.parse-packages.outputs.PACKAGE_ARRAY }}; do
             echo "Building package: $package"
             scrypto build -p $package
           done
