@@ -46,7 +46,7 @@ jobs:
       - name: Build Blueprints for each package 
         run: |
           IFS=',' 
-          for package in ${{ inputs.packages }}; do
+          for package in "${{ inputs.packages }}"; do
             echo "Building package: $package"
             scrypto build -p $package
           done
