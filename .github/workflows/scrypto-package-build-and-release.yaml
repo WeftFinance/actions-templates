@@ -42,6 +42,9 @@ jobs:
             /usr/local/cargo/registry/cache/
             /src/**/target/
           key: ${{ runner.os }}-cargo-${{ hashFiles('**/Cargo.lock') }}
+     
+      - name: Install jq
+        run: sudo apt-get update && sudo apt-get install -y jq
 
       - name: Parse package array
         id: parse-packages
