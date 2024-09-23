@@ -55,7 +55,8 @@ jobs:
 
       - name: Build Blueprints for each package
         run: |
-          IFS=',' read -r -a package_array <<< "${{ inputs.packages }}"
+          joined_packages="${{ inputs.packages }}"
+          IFS=',' read -r -a package_array <<< "$joined_packages"
           for package in package_array; do
             echo "Building package: $package"
             scrypto build -p $package
