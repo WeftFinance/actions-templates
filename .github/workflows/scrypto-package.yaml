@@ -1,0 +1,83 @@
+name: Template - Scrypto Package CI
+
+on:
+  workflow_call:
+    inputs:
+      scrypto_version:
+        required: true
+        type: string
+      release:
+        required: true
+        type: boolean
+      packages:
+        required: true
+        type: string   # Accept comma separated list of packages as a string
+      path:
+        required: false
+        type: string
+        default: "."
+
+jobs:
+  scrypto-build-and-release:
+    name: Build Blueprints
+    permissions:
+      contents: write
+    runs-on: ubuntu-latest
+    container:
+      image: ghcr.io/weftfinance/scrypto-builder:${{inputs.scrypto_version}}
+      env:
+        DOCKER_DEFAULT_PLATFORM: linux/amd64/v4
+      
+      volumes:
+        - ${{github.workspace}}:/src
+
+    steps:
+
+      - name: Checkout
+        uses: actions/checkout@v4
+      
+      - name: Restore dependencies from cache
+        id: restore-cache
+        uses: actions/cache/restore@v4
+        with:
+          path: |
+            /usr/local/cargo/registry/index/
+            /usr/local/cargo/registry/cache/
+            /src/**/target/
+          key: ${{ runner.os }}-cargo-${{ hashFiles('**/Cargo.lock') }} 
+
+      - name: Check, format and lint
+        run: |
+          cd "${{ inputs.path }}"
+          cargo fmt -- --check
+          cargo clippy -- -D warnings
+          cargo audit
+          cargo test --quiet
+
+      - name: Build and release 
+        if: ${{ inputs.release }}
+        run: |
+          IFS=',' 
+          joined_packages=${{ inputs.packages }}
+          for package in  $joined_packages; do
+            echo "Building package: $package"
+            scrypto build -p $package
+          done
+
+      - name: Create Release
+        if: ${{ inputs.release }}
+        uses: ncipollo/release-action@v1
+        with:
+          artifacts: "./target/wasm32-unknown-unknown/release/*.wasm,./target/wasm32-unknown-unknown/release/*.rpd"
+          tag: ${{ github.ref_name }}/${{ github.run_number }}
+          name: "Package wasm release: ${{ github.ref_name }} - ${{ github.run_number }}"
+          prerelease: ${{ github.ref_name != 'main' }}
+          
+      - name: Cache dependencies
+        uses: actions/cache/save@v4
+        with:
+          path: |
+            /usr/local/cargo/registry/index/
+            /usr/local/cargo/registry/cache/
+            /src/**/target/
+          key: ${{ steps.restore-cache.outputs.cache-primary-key }}
