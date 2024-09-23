@@ -12,14 +12,18 @@ on:
       packages:
         required: true
         type: string   # Accept comma separated list of packages as a string
+      check_and_lint:
+        required: false
+        type: boolean
+        default: true
       path:
         required: false
         type: string
         default: "."
 
 jobs:
-  scrypto-build-and-release:
-    name: Build Blueprints
+  scrypto-ci:
+    name: Check, Test and Build
     permissions:
       contents: write
     runs-on: ubuntu-latest
@@ -54,7 +58,7 @@ jobs:
           cargo audit
           cargo test --quiet
 
-      - name: Build and release 
+      - name: Build
         if: ${{ inputs.release }}
         run: |
           IFS=',' 
@@ -64,7 +68,7 @@ jobs:
             scrypto build -p $package
           done
 
-      - name: Create Release
+      - name: Release
         if: ${{ inputs.release }}
         uses: ncipollo/release-action@v1
         with:
