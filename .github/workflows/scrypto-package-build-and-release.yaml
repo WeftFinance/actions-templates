@@ -41,22 +41,12 @@ jobs:
             /usr/local/cargo/registry/index/
             /usr/local/cargo/registry/cache/
             /src/**/target/
-          key: ${{ runner.os }}-cargo-${{ hashFiles('**/Cargo.lock') }}
-     
-      # - name: Install jq
-      #   run: apt-get update && apt-get install -y jq
-
-      # - name: Parse package array
-      #   id: parse-packages
-      #   run: |
-      #     PACKAGES=$(echo '${{ inputs.packages }}' | jq -r '.[]')
-      #     echo "Packages array: \n $PACKAGES"
-      #     echo "PACKAGE_ARRAY=$PACKAGES" >> $GITHUB_OUTPUT
+          key: ${{ runner.os }}-cargo-${{ hashFiles('**/Cargo.lock') }} 
 
       - name: Build Blueprints for each package
-        run: |
-          joined_packages="${{ inputs.packages }}"
-          IFS=',' read -r -a package_array <<< "$joined_packages"
+        run: joined_packages="${{ inputs.packages }}"
+      - run:  IFS=',' read -r -a package_array <<< "$joined_packages"
+      - run: |
           for package in package_array; do
             echo "Building package: $package"
             scrypto build -p $package
