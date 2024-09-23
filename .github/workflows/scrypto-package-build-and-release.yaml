@@ -5,7 +5,7 @@ on:
     inputs:
       packages:
         required: true
-        type: string   # Accept the JSON array of packages as a string
+        type: string   # Accept comma separated list of packages as a string
       scrypto_version:
         required: true
         type: string
@@ -43,19 +43,20 @@ jobs:
             /src/**/target/
           key: ${{ runner.os }}-cargo-${{ hashFiles('**/Cargo.lock') }}
      
-      - name: Install jq
-        run: apt-get update && apt-get install -y jq
+      # - name: Install jq
+      #   run: apt-get update && apt-get install -y jq
 
-      - name: Parse package array
-        id: parse-packages
-        run: |
-          PACKAGES=$(echo '${{ inputs.packages }}' | jq -r '.[]')
-          echo "Packages array: \n $PACKAGES"
-          echo "PACKAGE_ARRAY=$PACKAGES" >> $GITHUB_OUTPUT
+      # - name: Parse package array
+      #   id: parse-packages
+      #   run: |
+      #     PACKAGES=$(echo '${{ inputs.packages }}' | jq -r '.[]')
+      #     echo "Packages array: \n $PACKAGES"
+      #     echo "PACKAGE_ARRAY=$PACKAGES" >> $GITHUB_OUTPUT
 
       - name: Build Blueprints for each package
         run: |
-          for package in ${{ steps.parse-packages.outputs.PACKAGE_ARRAY }}; do
+          IFS=',' read -r -a package_array <<< "${{ inputs.packages }}"
+          for package in package_array; do
             echo "Building package: $package"
             scrypto build -p $package
           done
