@@ -3,13 +3,13 @@ name: Template - Scrypto Package CI - Build and Release
 on:
   workflow_call:
     inputs:
-      package:
+      packages:
         required: true
-        type: string
+        type: string   # Accept the JSON array of packages as a string
       scrypto_version:
         required: true
         type: string
-    
+
 jobs:
   scrypto-build-and-release:
     name: Build Blueprints
@@ -39,13 +39,24 @@ jobs:
             /src/**/target/
           key: ${{ runner.os }}-cargo-${{ hashFiles('**/Cargo.lock') }}
 
-      - name: Build Blueprints
-        run: scrypto build -p ${{ inputs.package }}
-         
+      - name: Parse package array
+        id: parse-packages
+        run: |
+          echo "Packages: ${{ inputs.packages }}"
+          PACKAGES=$(echo '${{ inputs.packages }}' | jq -r '.[]')
+          echo "::set-output name=package_array::${PACKAGES}"
+
+      - name: Build Blueprints for each package
+        run: |
+          for package in ${{ steps.parse-packages.outputs.package_array }}; do
+            echo "Building package: $package"
+            scrypto build -p $package
+          done
+
       - name: Create Release
         uses: ncipollo/release-action@v1
         with:
-          artifacts: "./target/wasm32-unknown-unknown/release/{{ inputs.package }}.wasm,${{ inputs.package }}/target/wasm32-unknown-unknown/release/{{ inputs.package }}.rpd"
-          tag: ${{ inputs.package }}/${{ github.ref_name }}/${{ github.run_number }}
-          name: "Package release: ${{ inputs.package }} (${{ github.ref_name }}) - ${{ github.run_number }}"
+          artifacts: "./target/wasm32-unknown-unknown/release/*.wasm,./target/wasm32-unknown-unknown/release/*.rpd"
+          tag: ${{ github.ref_name }}/${{ github.run_number }}
+          name: "Package wasm release: ${{ github.ref_name }}) - ${{ github.run_number }}"
           prerelease: ${{ github.ref_name != 'main' }}
