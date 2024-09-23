@@ -3,15 +3,13 @@ name: Template - Scrypto Package CI - Linut and Test
 on:
   workflow_call:
     inputs:
-      package:
-        required: true
-        type: string
       scrypto_version:
         required: true
         type: string
-      create_release:
+      path:
         required: false
-        type: boolean
+        type: string
+        default: "."
     
 jobs:
   scrypto-lint-and-test:
@@ -43,7 +41,7 @@ jobs:
 
       - name: Check, format and lint
         run: |
-          cd "${{ inputs.package }}"
+          cd "${{ inputs.path }}"
           cargo fmt -- --check
           cargo clippy -- -D warnings
           cargo audit

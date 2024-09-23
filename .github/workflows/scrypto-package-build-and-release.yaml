@@ -9,6 +9,10 @@ on:
       scrypto_version:
         required: true
         type: string
+      path:
+        required: false
+        type: string
+        default: "."
 
 jobs:
   scrypto-build-and-release:
@@ -60,3 +64,4 @@ jobs:
           tag: ${{ github.ref_name }}/${{ github.run_number }}
           name: "Package wasm release: ${{ github.ref_name }}) - ${{ github.run_number }}"
           prerelease: ${{ github.ref_name != 'main' }}
+          
