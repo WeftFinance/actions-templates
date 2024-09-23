@@ -57,6 +57,6 @@ jobs:
         with:
           artifacts: "./target/wasm32-unknown-unknown/release/*.wasm,./target/wasm32-unknown-unknown/release/*.rpd"
           tag: ${{ github.ref_name }}/${{ github.run_number }}
-          name: "Package wasm release: ${{ github.ref_name }}) - ${{ github.run_number }}"
+          name: "Package wasm release: ${{ github.ref_name }} - ${{ github.run_number }}"
           prerelease: ${{ github.ref_name != 'main' }}
           
